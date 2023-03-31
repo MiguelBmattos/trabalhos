@@ -1,0 +1,40 @@
+public class Main{
+    public static class Funcionario{
+        public String nome;
+        public Funcionario(String nome){
+            this.nome=nome;
+        }
+    }
+        public static class Engenheiro extends Funcionario{
+            public Engenheiro (String nome){
+                super(nome);
+            }
+        } 
+        public static class Diretor extends Funcionario{
+            public Diretor (String nome){
+                super(nome);
+            }
+        }
+        public static class Secretario extends Funcionario{
+            public Secretario (String nome){
+                super(nome);
+            }
+        }
+        public static class Gerente extends Funcionario{
+            public Gerente (String nome){
+                super (nome);
+            }
+        }
+        public static void main(String[] args){
+           
+            Engenheiro engenheiro1=new Engenheiro("miguel");
+            Diretor diretor1=new Diretor("eu");
+            Secretario secretario1=new Secretario("spawn");
+            Gerente gerente1=new Gerente("me");
+            System.out.printf("nome do engenheiro:%s\n",engenheiro1.nome);
+            System.out.printf("nome do diretor:%s\n",diretor1.nome);
+            System.out.printf("nome do secretario:%s\n",secretario1.nome);
+            System.out.printf("nome do gerente:%s\n",gerente1.nome);
+            
+        }
+    }
