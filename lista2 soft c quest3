@@ -1,0 +1,14 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+int main (){
+  time_t horaAgora,futuro;
+  int seg;
+  printf("informe os segundos:\n");
+  scanf("%d",&seg);
+  time(&horaAgora);
+  futuro=horaAgora+seg;
+  struct tm *tempoFuturo=localtime(&futuro);
+  printf("Em %d segundos,serão:%02d/%02d/%02d %02d:%02d:%02d.\n",seg,tempoFuturo->tm_mday,tempoFuturo->tm_mon+1,tempoFuturo->tm_year+1900,tempoFuturo->tm_hour,tempoFuturo->tm_min,tempoFuturo->tm_sec);
+  return 0;
+}
