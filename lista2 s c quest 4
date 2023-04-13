@@ -1,0 +1,11 @@
+#include <stdio.h>
+
+#include <string.h>
+int main (){
+  char linhA [50];
+  printf("preencha a string com carateres:\n");
+  fgets(linhA,50,stdin);
+  printf("%s\n",linhA);
+  printf("%lu",strlen(linhA)-1);
+  return 0;
+}
