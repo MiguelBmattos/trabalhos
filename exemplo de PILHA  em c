@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct Node{
+int item;
+
+struct Node *prox;
+};
+typedef struct Node node;
+int vazia(node *PILHA){
+  return(PILHA->prox==NULL);
+}
+int tam=0;
+void PUSH(node *PILHA){
+  
+  node *novo=(node *) malloc(sizeof(node));
+  novo->prox=NULL;
+  printf("novo item:");
+  scanf("%d",&novo->item);
+  if(vazia(PILHA))
+    PILHA->prox = novo;
+  else{
+      node *tmp = PILHA->prox;
+    while(tmp->prox != NULL){
+      tmp=tmp->prox;
+    }
+    tmp->prox=novo;
+  }
+  tam++;
+}
+void IMPRIME(node *PILHA){
+  
+  if(vazia(PILHA)){
+    printf("PILHA vazia!\n\n");
+    return;
+  }
+  node *tmp;
+  tmp=PILHA->prox;
+  printf("\nPILHA:");
+  while(tmp !=NULL){
+    printf(" %3d",tmp->item);
+    tmp=tmp->prox;
+  }
+  printf("\nQtde itens PILHA: %d",tam);
+  printf("\n");
+}
+void POP(node *PILHA){
+  
+  if(PILHA->prox==NULL){
+    printf("PILHA ja vazia\n\n");
+    return;
+  }else{
+    node *ultimo = PILHA->prox;
+    node *penultimo = PILHA;
+    while(ultimo->prox !=NULL){
+      penultimo = ultimo;
+      ultimo=ultimo->prox;
+    }
+    free(ultimo);
+    penultimo->prox=NULL;
+    tam--;
+  }
+}
+int main(){
+node  *PILHA =(node *)malloc(sizeof(node));
+  PILHA ->prox=NULL;
+  
+  int tam=0;
+  PUSH (PILHA);
+  PUSH (PILHA);
+  PUSH (PILHA);
+  IMPRIME (PILHA);
+  POP (PILHA);
+  IMPRIME (PILHA);
+  free(PILHA);
+  return 0;
+}
