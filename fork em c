@@ -1,0 +1,23 @@
+#include <stdio.h>
+#include <unistd.h>
+void forkexample(){
+  if(fork()==0)
+    printf("hello from child\n");
+  else
+    printf("hello from parent\n");
+}
+int main(){
+  forkexample();
+}
+
+//outro exemplo
+#include <stdio.h>
+#include <unistd.h>
+int main (){
+  fork();
+  fork();
+  printf("hello world\n");
+
+
+  return 0;
+}
