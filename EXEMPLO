@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <errno.h>
+#include <unistd.h>
+int main(){
+  pid_t ipid;
+  printf("\nDuplicado o processo\n");
+  ipid=fork();
+  if(ipid<0){
+    perror("Error");
+    exit(errno);
+  }
+  if(ipid !=0){
+    printf("\nCodigo executado no processo pai\n");
+    printf("\nPai -processo pai.PID:|%d|\n",getpid());
+    printf("\nPai -processo filho.PID:|%d|\n",ipid);
+  }else{
+    printf("\nCodigo executado pelo filho");
+  }
+  if(ipid==0){
+    printf("\nCodigo executado no processo filho\n");
+    printf("\nFilho -processopai. PID:|%d|\n",getpid());
+    printf("\nFilho -processo filho.PID:|%d|\n",getpid());
+  }else{
+    printf("\nCodigo executado pelo pai");
+  }
+  printf("Esta mensagem sera impressa 2 vezes");
+  return 0;
+}
