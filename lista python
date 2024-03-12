@@ -1,0 +1,6 @@
+f=open('pessoas.txt','r')
+for linha in f:
+  [nome, rg, cpf, ano]=linha.split(',')
+  idade=2024-int(ano)
+  print('nome:', nome, ' RG:', rg, ' CPF:', cpf, ' ano:', ano, ' Idade:', idade)
+f.close()
