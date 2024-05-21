@@ -1,0 +1,165 @@
+import sqlite3
+
+def criar_tabelas():
+    conn = sqlite3.connect('sistema_notas.db')
+    cursor = conn.cursor()
+    
+    # Criação da tabela aluno
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS aluno (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT NOT NULL
+    )
+    ''')
+    
+    # Criação da tabela nota
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS nota (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        aluno_id INTEGER,
+        disciplina TEXT NOT NULL,
+        nota REAL NOT NULL,
+        FOREIGN KEY(aluno_id) REFERENCES aluno(id)
+    )
+    ''')
+    
+    conn.commit()
+    conn.close()
+
+def inserir_aluno(nome):
+    conn = sqlite3.connect('sistema_notas.db')
+    cursor = conn.cursor()
+    
+    cursor.execute('''
+    INSERT INTO aluno (nome) VALUES (?)
+    ''', (nome,))
+    
+    conn.commit()
+    conn.close()
+
+def inserir_nota(aluno_id, disciplina, nota):
+    conn = sqlite3.connect('sistema_notas.db')
+    cursor = conn.cursor()
+    
+    cursor.execute('''
+    INSERT INTO nota (aluno_id, disciplina, nota) VALUES (?, ?, ?)
+    ''', (aluno_id, disciplina, nota))
+    
+    conn.commit()
+    conn.close()
+
+def excluir_aluno(aluno_id):
+    conn = sqlite3.connect('sistema_notas.db')
+    cursor = conn.cursor()
+    
+    cursor.execute('''
+    DELETE FROM aluno WHERE id = ?
+    ''', (aluno_id,))
+    
+    conn.commit()
+    conn.close()
+
+def excluir_nota(nota_id):
+    conn = sqlite3.connect('sistema_notas.db')
+    cursor = conn.cursor()
+    
+    cursor.execute('''
+    DELETE FROM nota WHERE id = ?
+    ''', (nota_id,))
+    
+    conn.commit()
+    conn.close()
+
+def modificar_aluno(aluno_id, novo_nome):
+    conn = sqlite3.connect('sistema_notas.db')
+    cursor = conn.cursor()
+    
+    cursor.execute('''
+    UPDATE aluno SET nome = ? WHERE id = ?
+    ''', (novo_nome, aluno_id))
+    
+    conn.commit()
+    conn.close()
+
+def modificar_nota(nota_id, nova_nota):
+    conn = sqlite3.connect('sistema_notas.db')
+    cursor = conn.cursor()
+    
+    cursor.execute('''
+    UPDATE nota SET nota = ? WHERE id = ?
+    ''', (nova_nota, nota_id))
+    
+    conn.commit()
+    conn.close()
+
+def consultar_alunos():
+    conn = sqlite3.connect('sistema_notas.db')
+    cursor = conn.cursor()
+    
+    cursor.execute('SELECT * FROM aluno')
+    alunos = cursor.fetchall()
+    
+    conn.close()
+    return alunos
+
+def consultar_notas():
+    conn = sqlite3.connect('sistema_notas.db')
+    cursor = conn.cursor()
+    
+    cursor.execute('SELECT * FROM nota')
+    notas = cursor.fetchall()
+    
+    conn.close()
+    return notas
+
+def consultar_notas_por_aluno(aluno_id):
+    conn = sqlite3.connect('sistema_notas.db')
+    cursor = conn.cursor()
+    
+    cursor.execute('SELECT * FROM nota WHERE aluno_id = ?', (aluno_id,))
+    notas = cursor.fetchall()
+    
+    conn.close()
+    return notas
+
+# Exemplo de uso das funções
+if __name__ == '__main__':
+    criar_tabelas()
+    
+    # Inserir dados
+    inserir_aluno('João Silva')
+    inserir_aluno('Maria Oliveira')
+    inserir_nota(1, 'Matemática', 8.5)
+    inserir_nota(2, 'Português', 9.0)
+    
+    # Consultar dados
+    print('Alunos:')
+    print(consultar_alunos())
+    
+    print('Notas:')
+    print(consultar_notas())
+    
+    print('Notas do aluno com ID 1:')
+    print(consultar_notas_por_aluno(1))
+    
+    # Modificar dados
+    modificar_aluno(1, 'João Pedro Silva')
+    modificar_nota(1, 9.5)
+    
+    # Consultar dados modificados
+    print('Alunos após modificação:')
+    print(consultar_alunos())
+    
+    print('Notas após modificação:')
+    print(consultar_notas())
+    
+    # Excluir dados
+    excluir_nota(1)
+    excluir_aluno(1)
+    
+    # Consultar dados após exclusão
+    print('Alunos após exclusão:')
+    print(consultar_alunos())
+    
+    print('Notas após exclusão:')
+    print(consultar_notas())
