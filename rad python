@@ -1,165 +1,126 @@
 import sqlite3
 
-def criar_tabelas():
-    conn = sqlite3.connect('sistema_notas.db')
-    cursor = conn.cursor()
+def connect_db():
+    return sqlite3.connect('escola.db')
+
+def create_tables(conn):
+    with conn:
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS aluno (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome TEXT NOT NULL
+            )
+        ''')
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS nota (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                aluno_id INTEGER,
+                disciplina TEXT NOT NULL,
+                nota REAL,
+                FOREIGN KEY (aluno_id) REFERENCES aluno(id)
+            )
+        ''')
+
+def inserir_aluno(conn, nome):
+    with conn:
+        conn.execute('INSERT INTO aluno (nome) VALUES (?)', (nome,))
+
+def inserir_nota(conn, aluno_id, disciplina, nota):
+    with conn:
+        conn.execute('INSERT INTO nota (aluno_id, disciplina, nota) VALUES (?, ?, ?)', (aluno_id, disciplina, nota))
+
+def excluir_aluno(conn, aluno_id):
+    with conn:
+        conn.execute('DELETE FROM nota WHERE aluno_id = ?', (aluno_id,))
+        conn.execute('DELETE FROM aluno WHERE id = ?', (aluno_id,))
+
+def excluir_nota(conn, nota_id):
+    with conn:
+        conn.execute('DELETE FROM nota WHERE id = ?', (nota_id,))
+
+def modificar_aluno(conn, aluno_id, novo_nome):
+    with conn:
+        conn.execute('UPDATE aluno SET nome = ? WHERE id = ?', (novo_nome, aluno_id))
+
+def modificar_nota(conn, nota_id, nova_disciplina, nova_nota):
+    with conn:
+        conn.execute('UPDATE nota SET disciplina = ?, nota = ? WHERE id = ?', (nova_disciplina, nova_nota, nota_id))
+
+def consultar_alunos(conn):
+    with conn:
+        cursor = conn.execute('SELECT * FROM aluno')
+        return cursor.fetchall()
+
+def consultar_notas_aluno(conn, aluno_id):
+    with conn:
+        cursor = conn.execute('SELECT * FROM nota WHERE aluno_id = ?', (aluno_id,))
+        return cursor.fetchall()
+
+def menu():
+    print("Escolha uma o que deseja fazer pelos números das opções:")
+    print("1. Criar Tabelas")
+    print("2. Inserir Aluno")
+    print("3. Inserir Nota")
+    print("4. Consultar Alunos")
+    print("5. Consultar Notas")
+    print("6. Alterar Nome do Aluno")
+    print("7. Alterar Nota")
+    print("8. Encerrar Programa")
+
+def main():
+    conn = connect_db()
+    while True:
+        menu()
+        opcao = input("Opção: ")
+
+        if opcao == '1':
+            create_tables(conn)
+            print("Tabelas criadas com êxito.")
+        
+        elif opcao == '2':
+            nome = input("Nome do aluno: ")
+            inserir_aluno(conn, nome)
+            print("Aluno inserido com êxito.")
+        
+        elif opcao == '3':
+            aluno_id = int(input("ID do aluno: "))
+            disciplina = input("Disciplina: ")
+            nota = float(input("Nota: "))
+            inserir_nota(conn, aluno_id, disciplina, nota)
+            print("Nota inserida com êxito.")
+        
+        elif opcao == '4':
+            alunos = consultar_alunos(conn)
+            for aluno in alunos:
+                print(f'ID: {aluno[0]}, Nome: {aluno[1]}')
+        
+        elif opcao == '5':
+            aluno_id = int(input("ID do aluno: "))
+            notas = consultar_notas_aluno(conn, aluno_id)
+            for nota in notas:
+                print(f'ID Nota: {nota[0]}, Disciplina: {nota[2]}, Nota: {nota[3]}')
+        
+        elif opcao == '6':
+            aluno_id = int(input("ID do aluno: "))
+            novo_nome = input("Novo nome do aluno: ")
+            modificar_aluno(conn, aluno_id, novo_nome)
+            print("Nome do aluno alterado com êxito.")
+        
+        elif opcao == '7':
+            nota_id = int(input("ID da nota: "))
+            nova_disciplina = input("Nova disciplina: ")
+            nova_nota = float(input("Nova nota: "))
+            modificar_nota(conn, nota_id, nova_disciplina, nova_nota)
+            print("Nota alterada com êxito.")
+        
+        elif opcao == '8':
+            print("Encerrando programa...")
+            break
+        
+        else:
+            print("Opção inválida. Tente novamente.")
     
-    # Criação da tabela aluno
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS aluno (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nome TEXT NOT NULL
-    )
-    ''')
-    
-    # Criação da tabela nota
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS nota (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        aluno_id INTEGER,
-        disciplina TEXT NOT NULL,
-        nota REAL NOT NULL,
-        FOREIGN KEY(aluno_id) REFERENCES aluno(id)
-    )
-    ''')
-    
-    conn.commit()
     conn.close()
 
-def inserir_aluno(nome):
-    conn = sqlite3.connect('sistema_notas.db')
-    cursor = conn.cursor()
-    
-    cursor.execute('''
-    INSERT INTO aluno (nome) VALUES (?)
-    ''', (nome,))
-    
-    conn.commit()
-    conn.close()
-
-def inserir_nota(aluno_id, disciplina, nota):
-    conn = sqlite3.connect('sistema_notas.db')
-    cursor = conn.cursor()
-    
-    cursor.execute('''
-    INSERT INTO nota (aluno_id, disciplina, nota) VALUES (?, ?, ?)
-    ''', (aluno_id, disciplina, nota))
-    
-    conn.commit()
-    conn.close()
-
-def excluir_aluno(aluno_id):
-    conn = sqlite3.connect('sistema_notas.db')
-    cursor = conn.cursor()
-    
-    cursor.execute('''
-    DELETE FROM aluno WHERE id = ?
-    ''', (aluno_id,))
-    
-    conn.commit()
-    conn.close()
-
-def excluir_nota(nota_id):
-    conn = sqlite3.connect('sistema_notas.db')
-    cursor = conn.cursor()
-    
-    cursor.execute('''
-    DELETE FROM nota WHERE id = ?
-    ''', (nota_id,))
-    
-    conn.commit()
-    conn.close()
-
-def modificar_aluno(aluno_id, novo_nome):
-    conn = sqlite3.connect('sistema_notas.db')
-    cursor = conn.cursor()
-    
-    cursor.execute('''
-    UPDATE aluno SET nome = ? WHERE id = ?
-    ''', (novo_nome, aluno_id))
-    
-    conn.commit()
-    conn.close()
-
-def modificar_nota(nota_id, nova_nota):
-    conn = sqlite3.connect('sistema_notas.db')
-    cursor = conn.cursor()
-    
-    cursor.execute('''
-    UPDATE nota SET nota = ? WHERE id = ?
-    ''', (nova_nota, nota_id))
-    
-    conn.commit()
-    conn.close()
-
-def consultar_alunos():
-    conn = sqlite3.connect('sistema_notas.db')
-    cursor = conn.cursor()
-    
-    cursor.execute('SELECT * FROM aluno')
-    alunos = cursor.fetchall()
-    
-    conn.close()
-    return alunos
-
-def consultar_notas():
-    conn = sqlite3.connect('sistema_notas.db')
-    cursor = conn.cursor()
-    
-    cursor.execute('SELECT * FROM nota')
-    notas = cursor.fetchall()
-    
-    conn.close()
-    return notas
-
-def consultar_notas_por_aluno(aluno_id):
-    conn = sqlite3.connect('sistema_notas.db')
-    cursor = conn.cursor()
-    
-    cursor.execute('SELECT * FROM nota WHERE aluno_id = ?', (aluno_id,))
-    notas = cursor.fetchall()
-    
-    conn.close()
-    return notas
-
-# Exemplo de uso das funções
 if __name__ == '__main__':
-    criar_tabelas()
-    
-    # Inserir dados
-    inserir_aluno('João Silva')
-    inserir_aluno('Maria Oliveira')
-    inserir_nota(1, 'Matemática', 8.5)
-    inserir_nota(2, 'Português', 9.0)
-    
-    # Consultar dados
-    print('Alunos:')
-    print(consultar_alunos())
-    
-    print('Notas:')
-    print(consultar_notas())
-    
-    print('Notas do aluno com ID 1:')
-    print(consultar_notas_por_aluno(1))
-    
-    # Modificar dados
-    modificar_aluno(1, 'João Pedro Silva')
-    modificar_nota(1, 9.5)
-    
-    # Consultar dados modificados
-    print('Alunos após modificação:')
-    print(consultar_alunos())
-    
-    print('Notas após modificação:')
-    print(consultar_notas())
-    
-    # Excluir dados
-    excluir_nota(1)
-    excluir_aluno(1)
-    
-    # Consultar dados após exclusão
-    print('Alunos após exclusão:')
-    print(consultar_alunos())
-    
-    print('Notas após exclusão:')
-    print(consultar_notas())
+    main()
