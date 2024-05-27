@@ -57,7 +57,7 @@ def consultar_notas_aluno(conn, aluno_id):
         return cursor.fetchall()
 
 def menu():
-    print("Escolha uma o que deseja fazer pelos números das opções:")
+    print("Escolha o que deseja fazer pelos números das opções:")
     print("1. Criar Tabelas")
     print("2. Inserir Aluno")
     print("3. Inserir Nota")
