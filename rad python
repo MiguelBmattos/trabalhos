@@ -75,43 +75,43 @@ def main():
 
         if opcao == '1':
             create_tables(conn)
-            print("Tabelas criadas com êxito.")
+            print("Tabelas criadas com êxito.\n")
         
         elif opcao == '2':
             nome = input("Nome do aluno: ")
             inserir_aluno(conn, nome)
-            print("Aluno inserido com êxito.")
+            print("Aluno inserido com êxito.\n")
         
         elif opcao == '3':
             aluno_id = int(input("ID do aluno: "))
             disciplina = input("Disciplina: ")
             nota = float(input("Nota: "))
             inserir_nota(conn, aluno_id, disciplina, nota)
-            print("Nota inserida com êxito.")
+            print("Nota inserida com êxito.\n")
         
         elif opcao == '4':
             alunos = consultar_alunos(conn)
             for aluno in alunos:
-                print(f'ID: {aluno[0]}, Nome: {aluno[1]}')
+                print(f'ID: {aluno[0]}, Nome: {aluno[1]}\n')
         
         elif opcao == '5':
             aluno_id = int(input("ID do aluno: "))
             notas = consultar_notas_aluno(conn, aluno_id)
             for nota in notas:
-                print(f'ID Nota: {nota[0]}, Disciplina: {nota[2]}, Nota: {nota[3]}')
+                print(f'ID Nota: {nota[0]}, Disciplina: {nota[2]}, Nota: {nota[3]}\n')
         
         elif opcao == '6':
             aluno_id = int(input("ID do aluno: "))
             novo_nome = input("Novo nome do aluno: ")
             modificar_aluno(conn, aluno_id, novo_nome)
-            print("Nome do aluno alterado com êxito.")
+            print("Nome do aluno alterado com êxito.\n")
         
         elif opcao == '7':
             nota_id = int(input("ID da nota: "))
             nova_disciplina = input("Nova disciplina: ")
             nova_nota = float(input("Nova nota: "))
             modificar_nota(conn, nota_id, nova_disciplina, nova_nota)
-            print("Nota alterada com êxito.")
+            print("Nota alterada com êxito.\n")
         
         elif opcao == '8':
             print("Encerrando programa...")
