@@ -94,7 +94,7 @@ def main():
         elif opcao == '4':
             alunos = consultar_alunos(conn)
             for aluno in alunos:
-                print(f'ID: {aluno[0]}, Nome: {aluno[1]}\n')
+                print(f'ID: {aluno[0]}, Nome: {aluno[1]}, Idade: {aluno[2]}\n')
         
         elif opcao == '5':
             aluno_id = int(input("ID do aluno: "))
