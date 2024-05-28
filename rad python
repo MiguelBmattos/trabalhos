@@ -9,6 +9,7 @@ def create_tables(conn):
             CREATE TABLE IF NOT EXISTS aluno (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nome TEXT NOT NULL
+                idade INTEGER NOT NULL
             )
         ''')
         conn.execute('''
@@ -21,9 +22,9 @@ def create_tables(conn):
             )
         ''')
 
-def inserir_aluno(conn, nome):
+def inserir_aluno(conn, nome, idade): 
     with conn:
-        conn.execute('INSERT INTO aluno (nome) VALUES (?)', (nome,))
+        conn.execute('INSERT INTO aluno (nome, idade) VALUES (?, ?)', (nome, idade))
 
 def inserir_nota(conn, aluno_id, disciplina, nota):
     with conn:
@@ -73,13 +74,14 @@ def main():
         menu()
         opcao = input("Opção: ")
 
-        if opcao == '1':
+       if opcao == '1':
             create_tables(conn)
             print("Tabelas criadas com êxito.\n")
         
         elif opcao == '2':
             nome = input("Nome do aluno: ")
-            inserir_aluno(conn, nome)
+            idade = int(input("Idade do aluno: ")) 
+            inserir_aluno(conn, nome, idade) 
             print("Aluno inserido com êxito.\n")
         
         elif opcao == '3':
